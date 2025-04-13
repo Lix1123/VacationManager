@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - Vacation Manager</title>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    @RenderSection("Styles", required: false)
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            color: #212529;
+        }
+
+        header {
+            background: #512da8;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover::after {
+            left: 0;
+            width: 100%;
+        }
+
+        nav a:hover {
+            transform: translateY(-2px);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background: #311b92;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 30px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            width: 340px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            display: none;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .notification-dropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-dropdown li {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e4e4e4;
+        }
+
+        body.dark-mode .container {
+            background-color: #1e1e1e;
+        }
+
+        body.dark-mode header {
+            background-color: #222;
+        }
+
+        body.dark-mode nav a {
+            color: #ccc;
+        }
+
+        body.dark-mode nav a::after {
+            background-color: #ccc;
+        }
+
+        body.dark-mode .notification-dropdown {
+            background-color: #2b2b2b;
+            color: #e4e4e4;
+            border-color: #444;
+        }
+
+        body.dark-mode footer {
+            background-color: #222;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="mb-2 mb-lg-0">Vacation Manager</h1>
+        <nav>
+            <a href="@Url.Action("Index", "Home")"><i class="fas fa-home me-1"></i>Начало</a>
+            <a href="@Url.Action("Index", "Dashboard")">Табло</a>
+            <a href="@Url.Action("Index", "User")">Потребители</a>
+            <a href="@Url.Action("Index", "Role")">Роли</a>
+            <a href="@Url.Action("Index", "Team")">Екипи</a>
+            <a href="@Url.Action("Index", "Project")">Проекти</a>
+            <a href="@Url.Action("Index", "LeaveRequest")">Отпуски</a>
+            <a href="@Url.Action("Index", "LeaveCalendar")">Календар</a>
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <div class="position-relative">
+                    <div class="notification-icon text-white" onclick="toggleNotifications()">
+                        <i class="fas fa-bell fa-lg"></i>
+                        @if (ViewBag.UnreadCount > 0)
+                        {
+                            <span id="notification-count" class="notification-count">@ViewBag.UnreadCount</span>
+                        }
+                    </div>
+
+                    <div id="notification-dropdown" class="notification-dropdown">
+                        <vc:notification></vc:notification>
+                        <hr />
+                        <a href="@Url.Action("Index", "Notification")" class="btn btn-sm btn-outline-primary w-100">Всички известия</a>
+                    </div>
+                </div>
+
+                <a href="@Url.Action("Index", "Profile")" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-user"></i> Профил
+                </a>
+
+                <button onclick="toggleDarkMode()" class="btn btn-outline-light btn-sm" id="darkModeBtn">🌙 Dark Mode</button>
+
+                <span style="color: white; font-weight: bold;">Здравей, @User.Identity.Name</span>
+                <a href="@Url.Action("Logout", "Auth")" class="btn btn-danger btn-sm">Изход</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Login", "Auth")" class="btn btn-light btn-sm">Вход</a>
+                <a href="@Url.Action("Register", "Auth")" class="btn btn-success btn-sm">Регистрация</a>
+            }
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Vacation Manager</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleNotifications() {
+            var dropdown = document.getElementById("notification-dropdown");
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+
+        document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("notification-dropdown");
+            const bell = document.querySelector(".notification-icon");
+
+            if (dropdown && bell && !bell.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const isDark = document.body.classList.contains("dark-mode");
+            localStorage.setItem("dark-mode", isDark ? "true" : "false");
+            document.getElementById("darkModeBtn").innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("dark-mode") === "true") {
+                document.body.classList.add("dark-mode");
+                document.getElementById("darkModeBtn").innerText = "☀️ Light Mode";
+            }
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

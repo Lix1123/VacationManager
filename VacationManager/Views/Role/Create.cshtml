@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Създай нова роля";
+}
+
+<h2 class="fade-in-up mb-4"><i class="fas fa-user-shield text-primary me-2"></i>Създай нова роля</h2>
+
+<form asp-action="Create" method="post" class="fade-in">
+    <div class="mb-3">
+        <label for="roleName" class="form-label">Име на ролята</label>
+        <input type="text" name="roleName" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success">Създай</button>
+</form>
+
+@section Scripts {
+<style>
+    @@keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.4s ease-in-out both;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-in-out both;
+    }
+</style>
+}

@@ -1,0 +1,205 @@
+﻿@model VacationManager.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Административен Панел";
+}
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="fade-in">
+    <h2 class="mb-4"><i class="fas fa-tools me-2"></i> Административен Панел</h2>
+
+    <!-- 🔹 Филтри -->
+    <form method="get" asp-action="Index" class="mb-4 p-3 rounded shadow-sm bg-light">
+        <h5><i class="fas fa-filter text-primary me-2"></i>Филтри</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Потребител</label>
+                <select name="selectedUserId" class="form-select">
+                    <option value="">-- Всички --</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.Id" selected="@(Model.SelectedUserId == user.Id)">
+                            @user.UserName
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Статус</label>
+                <select name="selectedStatus" class="form-select">
+                    <option value="">-- Всички --</option>
+                    <option value="Pending" selected="@(Model.SelectedStatus == LeaveStatus.Pending)">Очаква одобрение</option>
+                    <option value="Approved" selected="@(Model.SelectedStatus == LeaveStatus.Approved)">Одобрена</option>
+                    <option value="Rejected" selected="@(Model.SelectedStatus == LeaveStatus.Rejected)">Отказана</option>
+                </select>
+            </div>
+            <div class="col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    Филтрирай <i class="fas fa-filter ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 🔹 Статистика -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Общо потребители</h5>
+                    <p class="card-text fs-4">@Model.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Общо заявки</h5>
+                    <p class="card-text fs-4">@Model.TotalRequests</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Одобрени</h5>
+                    <p class="card-text fs-4">@Model.ApprovedRequests</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Отказани</h5>
+                    <p class="card-text fs-4">@Model.RejectedRequests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Потребители</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Имейл</th>
+                <th>Роля</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@(await Model.GetUserRoleAsync(user.Id) ?? "Няма роля")</td>
+                    <td>
+                        <form asp-action="AssignRole" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <select name="roleName" class="form-select">
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <option value="@role.Name">@role.Name</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Присвояване</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3 class="mt-5">Заявки за отпуски</h3>
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Потребител</th>
+                <th>Начална дата</th>
+                <th>Крайна дата</th>
+                <th>Причина</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var leaveRequest in Model.LeaveRequests)
+            {
+                <tr>
+                    <td>@leaveRequest.User?.UserName</td>
+                    <td>@leaveRequest.StartDate.ToShortDateString()</td>
+                    <td>@leaveRequest.EndDate.ToShortDateString()</td>
+                    <td>@leaveRequest.Reason</td>
+                    <td>
+                        @switch (leaveRequest.Status)
+                        {
+                            case LeaveStatus.Pending:
+                                <span class="badge bg-warning text-dark">В очакване</span>
+                                break;
+                            case LeaveStatus.Approved:
+                                <span class="badge bg-success">Одобрена</span>
+                                break;
+                            case LeaveStatus.Rejected:
+                                <span class="badge bg-danger">Отказана</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @if (leaveRequest.Status == LeaveStatus.Pending)
+                        {
+                            <form asp-action="ApproveLeave" method="post" class="d-inline">
+                                <input type="hidden" name="leaveRequestId" value="@leaveRequest.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Одобри</button>
+                            </form>
+                            <form asp-action="RejectLeave" method="post" class="d-inline">
+                                <input type="hidden" name="leaveRequestId" value="@leaveRequest.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Откажи</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3 class="mt-5">История на заявките</h3>
+    <table class="table table-sm table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Дата и час</th>
+                <th>Заявка</th>
+                <th>Действие</th>
+                <th>Извършена от</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model.RequestLogs.OrderByDescending(l => l.Timestamp))
+            {
+                <tr>
+                    <td>@log.Timestamp.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@log.LeaveRequest?.User?.UserName - @log.LeaveRequest?.StartDate.ToShortDateString() → @log.LeaveRequest?.EndDate.ToShortDateString()</td>
+                    <td><span class="fw-bold">@log.Action</span></td>
+                    <td>@log.PerformedBy?.UserName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,45 @@
+﻿@model VacationManager.Models.Project
+
+@{
+    ViewData["Title"] = "Създай проект";
+}
+
+<h2 class="fade-in-up mb-4"><i class="fas fa-folder-plus text-primary me-2"></i>Създаване на проект</h2>
+
+<form asp-action="Create" method="post" class="fade-in">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Име на проекта</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Описание</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success"><i class="fas fa-check-circle me-1"></i> Създай</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Отказ</a>
+</form>
+
+@section Scripts {
+<style>
+    @@keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.4s ease-in-out both;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-in-out both;
+    }
+</style>
+}

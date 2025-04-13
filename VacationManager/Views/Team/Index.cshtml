@@ -1,0 +1,109 @@
+﻿@model IEnumerable<VacationManager.Models.Team>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Екипи";
+
+    var user = UserManager.GetUserAsync(User).Result;
+    var roles = UserManager.GetRolesAsync(user).Result;
+    bool isAdminOrTeamLead = roles.Contains("Admin") || roles.Contains("TeamLead");
+}
+
+@section Styles {
+    <style>
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-action {
+            border-radius: 8px;
+            padding: 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-edit {
+            border: 2px solid #007bff;
+            color: #007bff;
+            background-color: transparent;
+        }
+
+        .btn-edit:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-delete {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            background-color: transparent;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-icon {
+            margin-right: 4px;
+        }
+    </style>
+}
+
+<h2 class="mb-4 fade-in">Списък на екипите</h2>
+
+@if (isAdminOrTeamLead)
+{
+    <a href="@Url.Action("Create")" class="btn btn-success mb-3 fade-in">Създай нов екип</a>
+}
+
+<table class="table table-bordered table-hover fade-in">
+    <thead class="table-dark">
+        <tr>
+            <th>Име на екипа</th>
+            <th>Лидер</th>
+            <th>Проект</th>
+            @if (isAdminOrTeamLead)
+            {
+                <th>Действия</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var team in Model)
+        {
+            <tr class="fade-in">
+                <td>@team.Name</td>
+                <td>@(team.TeamLead != null ? team.TeamLead.UserName : "Няма лидер")</td>
+                <td>@team.ProjectName</td>
+
+                @if (isAdminOrTeamLead)
+                {
+                    <td>
+                        <a href="@Url.Action("Edit", new { id = team.Id })" class="btn btn-action btn-edit me-2">
+                            <i class="fas fa-pen btn-icon"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = team.Id })" class="btn btn-action btn-delete">
+                            <i class="fas fa-trash btn-icon"></i>
+                        </a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

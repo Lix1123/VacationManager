@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Календар с отпуски";
+}
+
+<h2 class="mb-4 text-center fade-in"><i class="fas fa-calendar-alt text-primary me-2"></i>Календар с отпуски</h2>
+
+<!-- ✅ FullCalendar -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<div id="calendar" class="calendar-shadow fade-in-up"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'bg',
+            timeZone: 'local',
+            height: 'auto',
+            expandRows: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,listWeek'
+            },
+            events: '/LeaveCalendar/GetLeaveEvents',
+            eventColor: '#4a90e2',
+            eventTextColor: '#fff',
+            eventDisplay: 'block',
+            dayMaxEvents: true,
+            navLinks: true,
+        });
+
+        calendar.render();
+    });
+</script>
+
+<style>
+    @@keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    #calendar {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 25px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .calendar-shadow:hover {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        transform: scale(1.01);
+    }
+
+    .fc-toolbar-title {
+        font-size: 1.5rem;
+        color: #4a4a4a;
+    }
+
+    .fc-button {
+        background-color: #4a90e2 !important;
+        border: none !important;
+        border-radius: 5px !important;
+        padding: 6px 12px !important;
+        font-weight: bold;
+    }
+
+        .fc-button:hover {
+            background-color: #357ab7 !important;
+        }
+
+    .fc-daygrid-event {
+        font-size: 0.85rem;
+        border-radius: 6px;
+        padding: 4px;
+    }
+
+    .fc-event-title {
+        white-space: normal !important;
+    }
+</style>

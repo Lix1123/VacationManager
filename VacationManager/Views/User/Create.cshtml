@@ -1,0 +1,27 @@
+﻿@model VacationManager.Models.User
+
+@{
+    ViewData["Title"] = "Създай потребител";
+}
+
+<h2>Създаване на потребител</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" />
+    </div>
+    <div>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" />
+    </div>
+    <div>
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" />
+    </div>
+    <div>
+        <label>Парола</label>
+        <input type="password" name="password" required />
+    </div>
+    <button type="submit">Създай</button>
+</form>

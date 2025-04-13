@@ -1,0 +1,49 @@
+﻿@model VacationManager.Models.Project
+
+@{
+    ViewData["Title"] = "Редакция на проект";
+}
+
+<h2 class="fade-in-up mb-4 text-primary">
+    <i class="fas fa-edit me-2"></i>Редакция на проект
+</h2>
+
+<form asp-action="Edit" method="post" class="fade-in">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success me-2">
+        <i class="fas fa-save me-1"></i> Запази
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Отказ
+    </a>
+</form>
+
+@section Scripts {
+    <style>
+        @@keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+    </style>
+}

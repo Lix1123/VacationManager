@@ -1,0 +1,43 @@
+﻿@model VacationManager.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100 fade-in-up">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 420px;">
+        <h3 class="text-center mb-4 text-primary"><i class="fas fa-sign-in-alt me-2"></i>Вход</h3>
+        <form asp-action="Login">
+            <div class="form-group mb-3">
+                <label asp-for="Username" class="form-label">Потребителско име</label>
+                <input asp-for="Username" class="form-control" placeholder="Въведи име" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label">Парола</label>
+                <input asp-for="Password" class="form-control" placeholder="Въведи парола" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-check mb-3">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Запомни ме</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">🔐 Вход</button>
+        </form>
+        <div class="text-center mt-3">
+            <a asp-action="Register" asp-controller="Auth">Нямаш акаунт? Регистрирай се</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        @@keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-in-out both;
+        }
+    </style>
+}

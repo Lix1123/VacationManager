@@ -1,0 +1,45 @@
+﻿@model VacationManager.Models.User
+
+@{
+    ViewData["Title"] = "Изтриване на потребител";
+}
+
+<h2 class="fade-in-up mb-4 text-danger"><i class="fas fa-user-times me-2"></i>Изтриване на потребител</h2>
+
+<div class="alert alert-warning fade-in">
+    Сигурни ли сте, че искате да изтриете потребителя <strong>@Model.UserName</strong>?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post" class="fade-in">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger me-2">
+        <i class="fas fa-trash-alt me-1"></i> Изтрий
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Отказ
+    </a>
+</form>
+
+@section Scripts {
+    <style>
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+    </style>
+}

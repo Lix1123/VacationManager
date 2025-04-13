@@ -1,0 +1,120 @@
+﻿@model IEnumerable<VacationManager.Models.LeaveRequest>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Заявки за отпуски";
+
+    var isAdmin = User.IsInRole("Admin");
+    var isTeamLead = User.IsInRole("TeamLead");
+}
+
+<style>
+    .fade-in-up {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        0% {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<h2 class="mb-4 fade-in-up text-center">
+    <i class="fas fa-plane-departure text-primary me-2"></i> Заявки за отпуски
+</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info fade-in-up">
+        @TempData["Message"]
+    </div>
+}
+
+<table class="table table-bordered table-striped align-middle fade-in-up shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Потребител</th>
+            <th>Начална дата</th>
+            <th>Крайна дата</th>
+            <th>Причина</th>
+            <th>Статус</th>
+            @if (isAdmin || isTeamLead)
+            {
+                <th>Действия</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model)
+        {
+            var rowClass = request.Status switch
+            {
+                LeaveStatus.Approved => "table-success",
+                LeaveStatus.Rejected => "table-danger",
+                _ => "table-warning"
+            };
+
+            <tr class="@rowClass fade-in-up">
+                <td>@request.User?.UserName</td>
+                <td>@request.StartDate.ToString("dd.MM.yyyy")</td>
+                <td>@request.EndDate.ToString("dd.MM.yyyy")</td>
+                <td>@request.Reason</td>
+                <td>
+                    @switch (request.Status)
+                    {
+                        case LeaveStatus.Approved:
+                            <span class="badge bg-success">Одобрена</span>
+                            break;
+                        case LeaveStatus.Rejected:
+                            <span class="badge bg-danger">Отказана</span>
+                            break;
+                        default:
+                            <span class="badge bg-warning text-dark">Очаква</span>
+                            break;
+                    }
+                </td>
+                @if (isAdmin || isTeamLead)
+                {
+                    <td>
+                        @if (request.Status == LeaveStatus.Pending)
+                        {
+                            <form asp-action="Approve" asp-route-id="@request.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">✅ Одобри</button>
+                            </form>
+                            <form asp-action="Reject" asp-route-id="@request.Id" method="post" class="d-inline ms-1">
+                                <button type="submit" class="btn btn-sm btn-danger">❌ Откажи</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Няма действия</span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between align-items-center mt-4 fade-in-up">
+    <a href="@Url.Action("Create", "LeaveRequest")" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Нова заявка
+    </a>
+
+    @if (isAdmin)
+    {
+        <form asp-action="DeleteAll" method="post" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете ВСИЧКИ заявки?');">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt me-1"></i> Изтрий всички заявки
+            </button>
+        </form>
+    }
+</div>

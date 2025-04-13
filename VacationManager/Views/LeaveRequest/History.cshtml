@@ -1,0 +1,25 @@
+﻿@model IEnumerable<VacationManager.Models.RequestLog>
+
+<h2>История на заявките</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Заявка</th>
+            <th>Действие</th>
+            <th>Извършено от</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.Timestamp.ToLocalTime()</td>
+                <td>@($"{log.LeaveRequest?.StartDate:d} – {log.LeaveRequest?.EndDate:d}")</td>
+                <td>@log.Action</td>
+                <td>@log.PerformedBy?.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>

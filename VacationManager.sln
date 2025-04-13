@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationManager", "VacationManager\VacationManager.csproj", "{2328E05B-FE34-4D7F-9C6D-20CCB745A9E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Tests", "VacationManager.Tests\VacationManager.Tests.csproj", "{0051A451-83F6-4D10-94B4-65FBEF7426B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2328E05B-FE34-4D7F-9C6D-20CCB745A9E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2328E05B-FE34-4D7F-9C6D-20CCB745A9E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2328E05B-FE34-4D7F-9C6D-20CCB745A9E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2328E05B-FE34-4D7F-9C6D-20CCB745A9E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0051A451-83F6-4D10-94B4-65FBEF7426B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0051A451-83F6-4D10-94B4-65FBEF7426B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0051A451-83F6-4D10-94B4-65FBEF7426B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0051A451-83F6-4D10-94B4-65FBEF7426B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0E1B73C-89C7-4492-A9BD-60D99796EF0D}
+	EndGlobalSection
+EndGlobal

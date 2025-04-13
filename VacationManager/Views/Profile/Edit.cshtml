@@ -1,0 +1,38 @@
+﻿@model VacationManager.Models.User
+@{
+    ViewData["Title"] = "Редактиране на профил";
+}
+
+<h2>Редактиране на профил</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="mb-3">
+        <label asp-for="UserName" class="form-label">Потребителско име</label>
+        <input asp-for="UserName" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Имейл</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label">Име</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label">Фамилия</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Запази</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,85 @@
+﻿@model VacationManager.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100 fade-in-up">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 480px;">
+        <h3 class="text-center mb-4 text-success">
+            <i class="fas fa-user-plus me-2"></i>Регистрация
+        </h3>
+
+      
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" placeholder="Потребителско име" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="Име" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" placeholder="Фамилия" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="Имейл" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" placeholder="Парола" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Потвърди парола" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">✅ Регистрирай се</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a asp-action="Login" asp-controller="Auth">Вече имаш акаунт? Влез</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <style>
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-in-out both;
+        }
+    </style>
+}

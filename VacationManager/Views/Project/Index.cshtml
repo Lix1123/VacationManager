@@ -1,0 +1,108 @@
+﻿@model IEnumerable<VacationManager.Models.Project>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Проекти";
+
+    var user = UserManager.GetUserAsync(User).Result;
+    var roles = UserManager.GetRolesAsync(user).Result;
+    bool isAdminOrTeamLead = roles.Contains("Admin") || roles.Contains("TeamLead");
+}
+
+@section Styles {
+    <style>
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-action {
+            border-radius: 8px;
+            padding: 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-edit {
+            border: 2px solid #007bff;
+            color: #007bff;
+            background-color: transparent;
+        }
+
+        .btn-edit:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-delete {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            background-color: transparent;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-icon {
+            margin-right: 4px;
+        }
+    </style>
+}
+
+<h2 class="fade-in mb-4">Списък с проекти</h2>
+
+<table class="table fade-in">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Име</th>
+            <th>Описание</th>
+            @if (isAdminOrTeamLead)
+            {
+                <th>Действия</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr class="fade-in">
+                <td>@project.Id</td>
+                <td>@project.Name</td>
+                <td>@project.Description</td>
+                @if (isAdminOrTeamLead)
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-action btn-edit me-2">
+                            <i class="fas fa-pen btn-icon"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-action btn-delete">
+                            <i class="fas fa-trash btn-icon"></i>
+                        </a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (isAdminOrTeamLead)
+{
+    <a asp-action="Create" class="btn btn-primary mt-3 fade-in">Добави нов проект</a>
+}
